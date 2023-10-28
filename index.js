@@ -1,26 +1,27 @@
 const express = require("express");
 const app = express();
-const errorHandler = require("express-async-error").Handler;
 require("dotenv").config();
 
 const cors = require("cors");
 // DB connection
 require("./db");
+require("express-async-errors");
 
 //Requiring Routes
 const usersRouter = require("./src/routes/usersRoutes");
+const msgRouter = require("./src/routes/msgRoutes");
+const notificationRouter = require("./src/routes/notificationRoutes");
 
-const verifyToken = require("./src/utils/verifyToken");
+app.use(cors());
 
 // parsing incoming requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// error handler over any async function
-app.use(errorHandler());
 
 // Routes
 app.use("/users", usersRouter);
-
+app.use("/messeges", msgRouter);
+app.use("/notifications", notificationRouter);
 // Global error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
